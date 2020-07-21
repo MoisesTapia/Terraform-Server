@@ -1,0 +1,20 @@
+name: aws-security
+title: AWS InSpec Profile
+maintainer: Moises Pablo Ortiz Tapia
+copyright: Moises Tapia
+copyright_email: moisestapia741@gmail.com@gmail.com
+license: Apache-2.0
+summary: An InSpec Compliance Profile For AWS
+version: 0.1.0
+inspec_version: '~> 4'
+attributes:
+- name: endpoint
+  required: false
+  default: 'us-east-2.compute.amazonaws.com'
+  description: 'this endpoint depends of region and ami'
+  type: string
+depends:
+  - name: inspec-aws
+    url: https://github.com/inspec/inspec-aws/archive/master.tar.gz
+supports:
+  - platform: aws
