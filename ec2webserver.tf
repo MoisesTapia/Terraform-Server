@@ -3,12 +3,12 @@
 
 resource "aws_instance" "apacheserver" {
 
-    ami                     = "ami-0a63f96e85105c6d3"
-    instance_type           = "t2.micro"
+    ami                     = var.ami
+    instance_type           = var.name
     vpc_security_group_ids  = ["${aws_security_group.webserver_sg.id}"]
 
     tags = {
-        Name                = "Server"
+        Name                = var.name
     }
 
     user_data               =<<-EOF

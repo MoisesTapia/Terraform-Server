@@ -1,4 +1,4 @@
 # Author: Moises Tapia
 # Instance
 
-provider "aws" { region = "us-east-2"}
+provider "aws" { region = var.region}
