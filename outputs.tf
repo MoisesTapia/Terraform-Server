@@ -35,6 +35,9 @@ output "av_zone" {
     value   = "${aws_instance.apacheserver.availability_zone}"
 }
 
+output "secgroup_name" {
+    value   = "${aws_security_group.webserver_sg.name}"
+}
 
 # VPC
 

@@ -1,39 +1,30 @@
-# copyright: 2018, The Authors
+# copyright: 2020, The Authors
 
-title "Sample Section"
+content = inspec.profile.file("terraform.json")
+params = JSON.parse(content)
 
-aws_vpc_id = attribute("aws_vpc_id", default: "", description: "Optional AWS VPC identifier.")
 
-# You add controls here
-control "aws-single-vpc-exists-check" do # A unique ID for this control.
-  only_if { aws_vpc_id != "" } # Only run this control if the `aws_vpc_id` attribute is provided.
-  impact 1.0                                                                # The criticality, if this control fails.
-  title "Check to see if custom VPC exists."                                # A human-readable title.
-  describe aws_vpc(aws_vpc_id) do                                           # The test itself.
-    it { should exist }
-  end
-end
+instance_id   = params['instance_id']['value']
+instance_ami  = params['instance_ami']['value']
+av_zone       = params['av_zone']['value']
+vpc_id        = params['vpc_id']['value']
+secgroup_ids   = params['secgroup_id']['value']
 
-# Plural resources can be inspected to check for specific resource details.
-control "aws-vpcs-check" do
+title "Verify EC2 Instance"
+
+control "Check 01 - Insyance EC2 Exist" do
   impact 1.0
-  title "Check in all the VPCs for default sg not allowing 22 inwards"
-  aws_vpcs.vpc_ids.each do |vpc_id|
-    describe aws_security_group(vpc_id: vpc_id, group_name: "default") do
-      it { should allow_in(port: 22) }
-    end
+  title 'Intance EC2 Exist and has all propiertirs'
+  describe aws_ec2_instance(instance_id) do
+    it                          { should exist }
+    it                          { should be_running }
+    it                          { should_not have_roles }
+    its ('image_id')            { should eq instance_ami }
+    its ('availability_zone')   { should eq av_zone }
+    its ('security_group_ids')  { should include secgroup_ids }
+    its ('vpc_id')              { should eq vpc_id }
+
   end
 end
 
-control "aws-vpcs-multi-region-status-check" do                             # A unique ID for this control.
-  impact 1.0                                                                # The criticality, if this control fails.
-  title 'Check AWS VPCs in all regions have status "available"'             # A human-readable title.
-  aws_regions.region_names.each do |region|                                 # Loop over all available AWS regions
-    aws_vpcs(aws_region: region).vpc_ids.each do |vpc|                      # Find all VPCs in a single AWS region
-      describe aws_vpc(aws_region: region, vpc_id: vpc) do                  # The test itself.
-        it { should exist }                                                 # Confirms AWS VPC exists
-        it { should be_available }                                          # Confirms AWS VPC has status "available"
-      end
-    end
-  end
-end
+

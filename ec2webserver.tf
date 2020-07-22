@@ -4,14 +4,14 @@
 resource "aws_instance" "apacheserver" {
 
     ami                     = var.ami
-    instance_type           = var.name
+    instance_type           = var.instance
     vpc_security_group_ids  = ["${aws_security_group.webserver_sg.id}"]
 
     tags = {
         Name                = var.name
     }
 
-    user_data               =<<-EOF
+    user_data               =<<EOF
 
     #!/bin/bash
     exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
