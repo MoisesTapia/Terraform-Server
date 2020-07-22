@@ -3,20 +3,20 @@
 
 resource "aws_security_group" "webserver_sg" {
 
-    name    = "Terraform-Server"
+    name    = var.name_sg
 
     ingress {
         from_port   = var.http_port
         to_port     = var.http_port
         protocol    = var.protocol
-        cidr_blocks = ["201.141.44.213/32"]
+        cidr_blocks = [var.my_system]
     }
 
     ingress {
         from_port   = var.ssh_port
         to_port     = var.ssh_port
         protocol    = var.protocol
-        cidr_blocks = ["201.141.44.213/32"]
+        cidr_blocks = [var.my_system]
     }
 
     egress {

@@ -8,3 +8,5 @@ region      = "us-east-2"
 http_port   = 80
 ssh_port    = 22
 protocol    = "tcp"
+my_system   = "201.141.44.213/32"
+name_sg     = "Terraform-Server"
